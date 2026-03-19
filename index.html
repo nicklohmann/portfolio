@@ -11,17 +11,17 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #0a0e0f;
-      --surface:   #111618;
-      --border:    #1e2a2d;
-      --green:     #00ff88;
-      --cyan:      #00d4ff;
-      --orange:    #ff6b35;
-      --muted:     #4a6168;
-      --text:      #c8d8dc;
-      --text-dim:  #7a9ba4;
-      --mono:      'JetBrains Mono', monospace;
-      --sans:      'Syne', sans-serif;
+      --bg:       #0a0e0f;
+      --surface:  #111618;
+      --border:   #1e2a2d;
+      --green:    #00ff88;
+      --cyan:     #00d4ff;
+      --orange:   #ff6b35;
+      --muted:    #4a6168;
+      --text:     #c8d8dc;
+      --text-dim: #7a9ba4;
+      --mono:     'JetBrains Mono', monospace;
+      --sans:     'Syne', sans-serif;
     }
 
     html { scroll-behavior: smooth; }
@@ -35,7 +35,6 @@
       overflow-x: hidden;
     }
 
-    /* Grid background */
     body::before {
       content: '';
       position: fixed;
@@ -48,7 +47,6 @@
       z-index: 0;
     }
 
-    /* Noise overlay */
     body::after {
       content: '';
       position: fixed;
@@ -59,7 +57,6 @@
       opacity: 0.4;
     }
 
-    /* ── NAV ── */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -114,7 +111,6 @@
       50%       { box-shadow: 0 0 8px 2px rgba(0,255,136,0.2); }
     }
 
-    /* ── LAYOUT ── */
     main { position: relative; z-index: 1; }
     section { padding: 6rem 2.5rem; max-width: 1100px; margin: 0 auto; }
 
@@ -148,13 +144,13 @@
       margin-bottom: 3rem;
     }
 
-    /* ── HERO ── */
     #hero {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       padding-top: 5rem;
+      position: relative;
     }
 
     .hero-eyebrow {
@@ -188,7 +184,6 @@
     }
 
     .hero-typing-wrap .prompt { color: var(--green); }
-
     #typing-text { color: var(--cyan); }
 
     .cursor {
@@ -201,11 +196,7 @@
 
     @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
 
-    .hero-actions {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
 
     .btn {
       display: inline-flex;
@@ -222,29 +213,15 @@
       transition: all 0.2s;
     }
 
-    .btn-primary {
-      background: var(--green);
-      color: #000;
-      font-weight: 700;
-    }
-
+    .btn-primary { background: var(--green); color: #000; font-weight: 700; }
     .btn-primary:hover {
       background: #00cc6a;
       box-shadow: 0 0 20px rgba(0,255,136,0.3);
       transform: translateY(-1px);
     }
 
-    .btn-outline {
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    .btn-outline:hover {
-      border-color: var(--cyan);
-      color: var(--cyan);
-      transform: translateY(-1px);
-    }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-outline:hover { border-color: var(--cyan); color: var(--cyan); transform: translateY(-1px); }
 
     .hero-scroll {
       position: absolute;
@@ -259,25 +236,18 @@
       gap: 0.5rem;
     }
 
-    .hero-scroll::before {
-      content: '';
-      width: 30px;
-      height: 1px;
-      background: var(--muted);
-    }
+    .hero-scroll::before { content: ''; width: 30px; height: 1px; background: var(--muted); }
 
-    /* ── DIVIDER ── */
     .divider {
-      width: 100%;
+      width: calc(100% - 5rem);
       height: 1px;
       background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
-      margin: 0 2.5rem;
+      margin: 0 auto;
     }
 
-    /* ── PROJECTS ── */
     .projects-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-template-columns: repeat(2, 1fr);
       gap: 1.5px;
       background: var(--border);
       border: 1px solid var(--border);
@@ -289,7 +259,13 @@
       position: relative;
       overflow: hidden;
       transition: background 0.2s;
-      cursor: pointer;
+    }
+
+    .project-card.featured {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
     }
 
     .project-card::before {
@@ -303,14 +279,23 @@
       transition: transform 0.3s ease;
     }
 
+    .project-card.featured::before { background: var(--cyan); }
     .project-card:hover { background: #141c1f; }
     .project-card:hover::before { transform: scaleX(1); }
 
-    .project-num {
-      font-size: 0.65rem;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-      margin-bottom: 1rem;
+    .project-num { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 1rem; }
+
+    .featured-badge {
+      display: inline-block;
+      font-size: 0.6rem;
+      padding: 0.15rem 0.5rem;
+      background: rgba(0,212,255,0.1);
+      border: 1px solid rgba(0,212,255,0.3);
+      color: var(--cyan);
+      border-radius: 2px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
     }
 
     .project-title {
@@ -322,19 +307,11 @@
       letter-spacing: -0.02em;
     }
 
-    .project-desc {
-      font-size: 0.82rem;
-      color: var(--text-dim);
-      line-height: 1.7;
-      margin-bottom: 1.5rem;
-    }
+    .project-card.featured .project-title { font-size: 1.8rem; }
 
-    .project-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      margin-bottom: 1.5rem;
-    }
+    .project-desc { font-size: 0.82rem; color: var(--text-dim); line-height: 1.7; margin-bottom: 1.5rem; }
+
+    .project-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.5rem; }
 
     .tag {
       font-size: 0.65rem;
@@ -346,10 +323,7 @@
       letter-spacing: 0.05em;
     }
 
-    .project-links {
-      display: flex;
-      gap: 1rem;
-    }
+    .project-links { display: flex; gap: 1rem; }
 
     .project-links a {
       font-size: 0.72rem;
@@ -361,12 +335,29 @@
       padding-bottom: 1px;
     }
 
-    .project-links a:hover {
-      color: var(--cyan);
-      border-bottom-color: var(--cyan);
+    .project-links a:hover { color: var(--cyan); border-bottom-color: var(--cyan); }
+
+    .featured-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      border-left: 1px solid var(--border);
+      padding-left: 2rem;
     }
 
-    /* ── GITHUB ACTIVITY ── */
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+
+    .feature-item:last-child { border-bottom: none; }
+    .feature-item::before { content: '→'; color: var(--cyan); flex-shrink: 0; }
+
     .activity-wrap {
       display: grid;
       grid-template-columns: 1fr 280px;
@@ -390,10 +381,7 @@
       text-transform: uppercase;
     }
 
-    .graph-card img {
-      width: 100%;
-      filter: brightness(1.1);
-    }
+    .graph-card img { width: 100%; filter: brightness(1.1); }
 
     .stats-col {
       display: flex;
@@ -403,10 +391,7 @@
       border: 1px solid var(--border);
     }
 
-    .stat-box {
-      background: var(--surface);
-      padding: 1.5rem;
-    }
+    .stat-box { background: var(--surface); padding: 1.5rem; }
 
     .stat-value {
       font-family: var(--sans);
@@ -418,14 +403,8 @@
       letter-spacing: -0.03em;
     }
 
-    .stat-label {
-      font-size: 0.68rem;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
+    .stat-label { font-size: 0.68rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
 
-    /* ── SKILLS ── */
     .skills-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -434,10 +413,7 @@
       border: 1px solid var(--border);
     }
 
-    .skills-group {
-      background: var(--surface);
-      padding: 2rem;
-    }
+    .skills-group { background: var(--surface); padding: 2rem; }
 
     .skills-group-title {
       font-size: 0.65rem;
@@ -462,17 +438,8 @@
 
     .skill-item:last-child { border-bottom: none; }
     .skill-item:hover { color: var(--green); }
+    .skill-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); flex-shrink: 0; opacity: 0.6; }
 
-    .skill-dot {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: var(--green);
-      flex-shrink: 0;
-      opacity: 0.6;
-    }
-
-    /* ── ABOUT ── */
     .about-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -480,17 +447,8 @@
       align-items: start;
     }
 
-    .about-text p {
-      font-size: 0.88rem;
-      color: var(--text-dim);
-      line-height: 1.9;
-      margin-bottom: 1.2rem;
-    }
-
-    .about-text p strong {
-      color: var(--text);
-      font-weight: 500;
-    }
+    .about-text p { font-size: 0.88rem; color: var(--text-dim); line-height: 1.9; margin-bottom: 1.2rem; }
+    .about-text p strong { color: var(--text); font-weight: 500; }
 
     .about-right {
       display: flex;
@@ -508,34 +466,20 @@
       align-items: center;
     }
 
-    .about-stat-label {
-      font-size: 0.75rem;
-      color: var(--text-dim);
-    }
+    .about-stat-label { font-size: 0.75rem; color: var(--text-dim); }
+    .about-stat-val { font-family: var(--sans); font-size: 0.9rem; font-weight: 700; color: var(--green); }
 
-    .about-stat-val {
-      font-family: var(--sans);
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--green);
-    }
-
-    .about-stat.open-to-work {
-      background: rgba(0,255,136,0.05);
-      border-left: 2px solid var(--green);
-    }
+    .about-stat.open-to-work { background: rgba(0,255,136,0.05); border-left: 2px solid var(--green); }
 
     .open-dot {
       display: inline-block;
-      width: 7px;
-      height: 7px;
+      width: 7px; height: 7px;
       border-radius: 50%;
       background: var(--green);
       margin-right: 0.4rem;
       animation: blink 1.5s ease-in-out infinite;
     }
 
-    /* ── FOOTER ── */
     footer {
       position: relative;
       z-index: 1;
@@ -544,54 +488,30 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      max-width: 100%;
     }
 
-    footer p {
-      font-size: 0.7rem;
-      color: var(--muted);
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 1.5rem;
-    }
-
-    .footer-links a {
-      font-size: 0.7rem;
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
+    footer p { font-size: 0.7rem; color: var(--muted); }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { font-size: 0.7rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
     .footer-links a:hover { color: var(--green); }
 
-    /* ── REVEAL ANIMATION ── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
 
-    .reveal.visible {
-      opacity: 1;
-      transform: none;
-    }
-
-    /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       nav { padding: 1rem 1.5rem; }
       .nav-links { display: none; }
       section { padding: 4rem 1.5rem; }
+      .project-card.featured { grid-template-columns: 1fr; }
+      .featured-details { border-left: none; border-top: 1px solid var(--border); padding-left: 0; padding-top: 1.5rem; }
+      .projects-grid { grid-template-columns: 1fr; }
       .activity-wrap { grid-template-columns: 1fr; }
       .about-grid { grid-template-columns: 1fr; gap: 2rem; }
-      .hero-name { font-size: clamp(2.5rem, 15vw, 7rem); }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
   <nav>
     <a href="#hero" class="nav-logo">NL</a>
     <ul class="nav-links">
@@ -605,7 +525,6 @@
 
   <main>
 
-    <!-- HERO -->
     <section id="hero">
       <p class="hero-eyebrow">// CS Student &amp; Full Stack Developer</p>
       <h1 class="hero-name">Nick<br><span>Lohmann</span></h1>
@@ -615,70 +534,93 @@
         <span class="cursor"></span>
       </div>
       <div class="hero-actions">
-        <a href="#projects" class="btn btn-primary">View Projects →</a>
-        <a href="https://github.com/nicklohmann" target="_blank" class="btn btn-outline">GitHub ↗</a>
-        <a href="mailto:nicklohmann@msn.com" class="btn btn-outline">Contact</a>
+        <a href="#projects" class="btn btn-primary">View Projects &rarr;</a>
+        <a href="https://github.com/nicklohmann" target="_blank" class="btn btn-outline">GitHub &nearr;</a>
+        <a href="mailto:nicholasdlohmann@gmail.com" class="btn btn-outline">Contact</a>
       </div>
       <p class="hero-scroll">Scroll to explore</p>
     </section>
 
-    <!-- PROJECTS -->
     <div class="divider"></div>
+
     <section id="projects">
       <p class="section-label">01</p>
       <h2>Projects</h2>
       <div class="projects-grid reveal">
 
-        <div class="project-card">
-          <p class="project-num">001</p>
-          <h3 class="project-title">Portfolio Site</h3>
-          <p class="project-desc">Personal portfolio built from scratch and deployed on Fly.io. Showcases projects, skills, and GitHub activity with a dark developer aesthetic.</p>
-          <div class="project-tags">
-            <span class="tag">HTML</span>
-            <span class="tag">CSS</span>
-            <span class="tag">JavaScript</span>
-            <span class="tag">Fly.io</span>
-            <span class="tag">Docker</span>
+        <div class="project-card featured">
+          <div>
+            <p class="project-num">001</p>
+            <span class="featured-badge">Featured</span>
+            <h3 class="project-title">Car Flip Tracker</h3>
+            <p class="project-desc">A full-stack PERN app built for my dad who flips used cars — buying damaged vehicles at IAA auctions, repairing them, and reselling. Includes a live bid calculator, VIN decoder, AI-powered damage estimation via the Claude API, and a church donation tracker (he donates 35% of every profit).</p>
+            <div class="project-tags">
+              <span class="tag">React</span>
+              <span class="tag">Node.js</span>
+              <span class="tag">Express</span>
+              <span class="tag">PostgreSQL</span>
+              <span class="tag">Cloudinary</span>
+              <span class="tag">Claude API</span>
+              <span class="tag">NHTSA API</span>
+              <span class="tag">Railway</span>
+              <span class="tag">Vercel</span>
+            </div>
+            <div class="project-links">
+              <a href="https://car-flip-tracker.vercel.app" target="_blank">Live Demo &nearr;</a>
+              <a href="https://github.com/nicklohmann/car-flip-tracker" target="_blank">GitHub &nearr;</a>
+            </div>
           </div>
-          <div class="project-links">
-            <a href="https://github.com/nicklohmann/portfolio" target="_blank">GitHub ↗</a>
-            <a href="#" target="_blank">Live ↗</a>
+          <div class="featured-details">
+            <div class="feature-item">VIN decoder — paste a VIN, auto-fills make, model, year &amp; drivetrain via NHTSA API</div>
+            <div class="feature-item">AI damage estimator — uploads photos to Claude API, returns a parts list with cost estimates</div>
+            <div class="feature-item">Live bid calculator using the 95% KBB trade-in formula to find the max safe auction bid</div>
+            <div class="feature-item">Parts tracker with per-car running totals that update financials in real time</div>
+            <div class="feature-item">Status workflow: evaluating &rarr; active &rarr; sold &rarr; passed</div>
+            <div class="feature-item">Dashboard showing total profit, flip history, and church donation totals</div>
+            <div class="feature-item">Deployed on Railway (backend + DB) and Vercel (frontend)</div>
           </div>
         </div>
 
         <div class="project-card">
           <p class="project-num">002</p>
-          <h3 class="project-title">Project Two</h3>
-          <p class="project-desc">Add your second project here — describe what it does, why you built it, and what makes it interesting to a recruiter or fellow dev.</p>
+          <h3 class="project-title">Cryptid Seeker</h3>
+          <p class="project-desc">A full-stack social app for cryptid hunters to log encounter stories, share sightings in a community newsfeed, and explore a database of mythological creatures. Built collaboratively by a team of 4 — I contributed to the backend REST API with JWT auth.</p>
           <div class="project-tags">
             <span class="tag">React</span>
             <span class="tag">Node.js</span>
-            <span class="tag">PostgreSQL</span>
+            <span class="tag">Express</span>
+            <span class="tag">MongoDB</span>
+            <span class="tag">JWT</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Fly.io</span>
+            <span class="tag">Netlify</span>
           </div>
           <div class="project-links">
-            <a href="https://github.com/nicklohmann" target="_blank">GitHub ↗</a>
+            <a href="https://cryptid-seeker.netlify.app/" target="_blank">Live Demo &nearr;</a>
+            <a href="https://github.com/MendersGame/front-end-cryptid-seeker" target="_blank">Frontend &nearr;</a>
+            <a href="https://github.com/MendersGame/back-end-cryptid-seeker" target="_blank">Backend &nearr;</a>
           </div>
         </div>
 
         <div class="project-card">
           <p class="project-num">003</p>
-          <h3 class="project-title">Project Three</h3>
-          <p class="project-desc">Add your third project here. Even if it's a WIP — "currently building" shows momentum and initiative, which recruiters love to see.</p>
+          <h3 class="project-title">Battleship: Cold War</h3>
+          <p class="project-desc">A browser-based recreation of the classic Battleship board game with a 1958 Cold War color palette. Two-player strategy game — place your ships in secret, then take turns firing shots to sink the enemy fleet before they sink yours.</p>
           <div class="project-tags">
-            <span class="tag">Python</span>
-            <span class="tag">FastAPI</span>
-            <span class="tag">Docker</span>
+            <span class="tag">JavaScript</span>
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
           </div>
           <div class="project-links">
-            <a href="https://github.com/nicklohmann" target="_blank">GitHub ↗</a>
+            <a href="https://github.com/nicklohmann/Battleship-Cold-War" target="_blank">GitHub &nearr;</a>
           </div>
         </div>
 
       </div>
     </section>
 
-    <!-- ACTIVITY -->
     <div class="divider"></div>
+
     <section id="activity">
       <p class="section-label">02</p>
       <h2>GitHub Activity</h2>
@@ -708,13 +650,12 @@
       </div>
     </section>
 
-    <!-- SKILLS -->
     <div class="divider"></div>
+
     <section id="skills">
       <p class="section-label">03</p>
       <h2>Skills</h2>
       <div class="skills-grid reveal">
-
         <div class="skills-group">
           <p class="skills-group-title">Languages</p>
           <div class="skill-item"><span class="skill-dot"></span>JavaScript</div>
@@ -724,48 +665,44 @@
           <div class="skill-item"><span class="skill-dot"></span>SQL</div>
           <div class="skill-item"><span class="skill-dot"></span>Bash</div>
         </div>
-
         <div class="skills-group">
-          <p class="skills-group-title">Frameworks & Libraries</p>
+          <p class="skills-group-title">Frameworks &amp; Libraries</p>
           <div class="skill-item"><span class="skill-dot"></span>React</div>
           <div class="skill-item"><span class="skill-dot"></span>Node.js / Express</div>
-          <div class="skill-item"><span class="skill-dot"></span>FastAPI</div>
-          <div class="skill-item"><span class="skill-dot"></span>Flask</div>
-          <div class="skill-item"><span class="skill-dot"></span>Tailwind CSS</div>
+          <div class="skill-item"><span class="skill-dot"></span>Vite</div>
+          <div class="skill-item"><span class="skill-dot"></span>React Router</div>
+          <div class="skill-item"><span class="skill-dot"></span>Axios</div>
         </div>
-
         <div class="skills-group">
-          <p class="skills-group-title">Databases</p>
+          <p class="skills-group-title">Databases &amp; Storage</p>
           <div class="skill-item"><span class="skill-dot"></span>PostgreSQL</div>
-          <div class="skill-item"><span class="skill-dot"></span>MySQL</div>
           <div class="skill-item"><span class="skill-dot"></span>MongoDB</div>
-          <div class="skill-item"><span class="skill-dot"></span>Redis</div>
-          <div class="skill-item"><span class="skill-dot"></span>SQLite</div>
+          <div class="skill-item"><span class="skill-dot"></span>MySQL</div>
+          <div class="skill-item"><span class="skill-dot"></span>Cloudinary</div>
         </div>
-
         <div class="skills-group">
-          <p class="skills-group-title">Cloud & DevOps</p>
+          <p class="skills-group-title">Cloud &amp; DevOps</p>
           <div class="skill-item"><span class="skill-dot"></span>Docker</div>
           <div class="skill-item"><span class="skill-dot"></span>Fly.io</div>
+          <div class="skill-item"><span class="skill-dot"></span>Railway</div>
+          <div class="skill-item"><span class="skill-dot"></span>Vercel</div>
           <div class="skill-item"><span class="skill-dot"></span>Git / GitHub</div>
           <div class="skill-item"><span class="skill-dot"></span>Linux</div>
-          <div class="skill-item"><span class="skill-dot"></span>AWS (basics)</div>
         </div>
-
       </div>
     </section>
 
-    <!-- ABOUT -->
     <div class="divider"></div>
+
     <section id="about">
       <p class="section-label">04</p>
       <h2>About</h2>
       <div class="about-grid reveal">
         <div class="about-text">
-          <p>Hey, I'm <strong>Nick</strong> — a CS student and full stack developer based in the US. I build things for the web, commit daily to GitHub, and genuinely enjoy the process of turning ideas into working software.</p>
-          <p>I'm most comfortable working across the stack — from designing APIs to wiring up frontends — and I'm always pushing to get better. Whether it's a side project or a collaborative codebase, I show up and ship.</p>
+          <p>Hey, I'm <strong>Nick</strong> — a CS student and full stack developer. I build things for the web, commit to GitHub regularly, and genuinely enjoy the process of turning ideas into working software.</p>
+          <p>I'm most comfortable working across the stack — from designing APIs and databases to wiring up React frontends. Whether it's a personal project or a collaborative codebase, I show up and ship.</p>
           <p>Currently looking for <strong>dev roles</strong> where I can contribute fast, learn from strong engineers, and build things that actually matter. If that sounds like your team, I'd love to talk.</p>
-          <a href="mailto:nicklohmann@msn.com" class="btn btn-primary" style="margin-top:1.5rem; display:inline-flex;">Get in touch →</a>
+          <a href="mailto:nicholasdlohmann@gmail.com" class="btn btn-primary" style="margin-top:1.5rem; display:inline-flex;">Get in touch &rarr;</a>
         </div>
         <div class="about-right">
           <div class="about-stat open-to-work">
@@ -786,7 +723,7 @@
           </div>
           <div class="about-stat">
             <span class="about-stat-label">Email</span>
-            <span class="about-stat-val">nicklohmann@msn.com</span>
+            <span class="about-stat-val">nicholasdlohmann@gmail.com</span>
           </div>
         </div>
       </div>
@@ -795,27 +732,26 @@
   </main>
 
   <footer>
-    <p>© 2026 Nick Lohmann — Built &amp; deployed with Fly.io</p>
+    <p>&copy; 2026 Nick Lohmann &mdash; Built &amp; deployed with Fly.io</p>
     <div class="footer-links">
       <a href="https://github.com/nicklohmann" target="_blank">GitHub</a>
-      <a href="mailto:nicklohmann@msn.com">Email</a>
+      <a href="mailto:nicholasdlohmann@gmail.com">Email</a>
     </div>
   </footer>
 
   <script>
-    // Typing effect
-    const phrases = [
+    var phrases = [
       'committing daily to GitHub',
       'building full stack apps',
       'open to dev roles',
       'learning something new every day',
       'shipping, not just planning'
     ];
-    let pi = 0, ci = 0, deleting = false;
-    const el = document.getElementById('typing-text');
+    var pi = 0, ci = 0, deleting = false;
+    var el = document.getElementById('typing-text');
 
     function type() {
-      const phrase = phrases[pi];
+      var phrase = phrases[pi];
       if (!deleting) {
         el.textContent = phrase.slice(0, ++ci);
         if (ci === phrase.length) { deleting = true; setTimeout(type, 2000); return; }
@@ -827,29 +763,24 @@
     }
     type();
 
-    // Scroll reveal
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.1 });
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
 
-    // GitHub stats
     fetch('https://api.github.com/users/nicklohmann')
-      .then(r => r.json())
-      .then(d => {
-        document.getElementById('stat-repos').textContent = d.public_repos ?? '—';
-      })
-      .catch(() => {});
+      .then(function(r) { return r.json(); })
+      .then(function(d) { if (d.public_repos != null) document.getElementById('stat-repos').textContent = d.public_repos; })
+      .catch(function() {});
 
-    // Count stars
     fetch('https://api.github.com/users/nicklohmann/repos?per_page=100')
-      .then(r => r.json())
-      .then(repos => {
+      .then(function(r) { return r.json(); })
+      .then(function(repos) {
         if (!Array.isArray(repos)) return;
-        const stars = repos.reduce((sum, r) => sum + (r.stargazers_count || 0), 0);
+        var stars = repos.reduce(function(sum, r) { return sum + (r.stargazers_count || 0); }, 0);
         document.getElementById('stat-stars').textContent = stars;
       })
-      .catch(() => {});
+      .catch(function() {});
   </script>
 
 </body>
