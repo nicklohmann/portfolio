@@ -1,213 +1,856 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link
-    id="favicon"
-    rel="icon"
-    href="./assets/images/favicon-32x32.png"
-    type="image/png"
-    sizes="32x32"
-    >
-  <link rel="stylesheet" href="./css/style.css">
-  <script defer src="./js/app.js"></script>
-  <title>Nicholas Lohmann</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nick Lohmann — Full Stack Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0e0f;
+      --surface:   #111618;
+      --border:    #1e2a2d;
+      --green:     #00ff88;
+      --cyan:      #00d4ff;
+      --orange:    #ff6b35;
+      --muted:     #4a6168;
+      --text:      #c8d8dc;
+      --text-dim:  #7a9ba4;
+      --mono:      'JetBrains Mono', monospace;
+      --sans:      'Syne', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 14px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Noise overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 2.5rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,14,15,0.85);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-logo {
+      font-family: var(--sans);
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--green);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--green); }
+
+    .nav-badge {
+      font-size: 0.7rem;
+      padding: 0.25rem 0.7rem;
+      border: 1px solid var(--green);
+      color: var(--green);
+      border-radius: 2px;
+      letter-spacing: 0.08em;
+      animation: pulse-border 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-border {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,136,0); }
+      50%       { box-shadow: 0 0 8px 2px rgba(0,255,136,0.2); }
+    }
+
+    /* ── LAYOUT ── */
+    main { position: relative; z-index: 1; }
+    section { padding: 6rem 2.5rem; max-width: 1100px; margin: 0 auto; }
+
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      max-width: 60px;
+      height: 1px;
+      background: var(--green);
+      opacity: 0.4;
+    }
+
+    h2 {
+      font-family: var(--sans);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 3rem;
+    }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 5rem;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-name {
+      font-family: var(--sans);
+      font-size: clamp(3rem, 10vw, 7rem);
+      font-weight: 800;
+      color: #fff;
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-name span { color: var(--green); }
+
+    .hero-typing-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+      color: var(--text-dim);
+      margin-bottom: 2.5rem;
+      min-height: 1.6em;
+    }
+
+    .hero-typing-wrap .prompt { color: var(--green); }
+
+    #typing-text { color: var(--cyan); }
+
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: var(--green);
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      border-radius: 2px;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: #000;
+      font-weight: 700;
+    }
+
+    .btn-primary:hover {
+      background: #00cc6a;
+      box-shadow: 0 0 20px rgba(0,255,136,0.3);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      transform: translateY(-1px);
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2rem;
+      left: 2.5rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .hero-scroll::before {
+      content: '';
+      width: 30px;
+      height: 1px;
+      background: var(--muted);
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
+      margin: 0 2.5rem;
+    }
+
+    /* ── PROJECTS ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .project-card {
+      background: var(--surface);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--green);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .project-card:hover { background: #141c1f; }
+    .project-card:hover::before { transform: scaleX(1); }
+
+    .project-num {
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+
+    .project-title {
+      font-family: var(--sans);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+
+    .project-desc {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .tag {
+      font-size: 0.65rem;
+      padding: 0.2rem 0.6rem;
+      background: rgba(0,255,136,0.07);
+      border: 1px solid rgba(0,255,136,0.15);
+      color: var(--green);
+      border-radius: 2px;
+      letter-spacing: 0.05em;
+    }
+
+    .project-links {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .project-links a {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid transparent;
+      transition: all 0.2s;
+      padding-bottom: 1px;
+    }
+
+    .project-links a:hover {
+      color: var(--cyan);
+      border-bottom-color: var(--cyan);
+    }
+
+    /* ── GITHUB ACTIVITY ── */
+    .activity-wrap {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .graph-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 2rem;
+    }
+
+    .graph-card h3 {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .graph-card img {
+      width: 100%;
+      filter: brightness(1.1);
+    }
+
+    .stats-col {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .stat-box {
+      background: var(--surface);
+      padding: 1.5rem;
+    }
+
+    .stat-value {
+      font-family: var(--sans);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--green);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.03em;
+    }
+
+    .stat-label {
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* ── SKILLS ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .skills-group {
+      background: var(--surface);
+      padding: 2rem;
+    }
+
+    .skills-group-title {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .skill-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.45rem 0;
+      font-size: 0.82rem;
+      color: var(--text);
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      transition: color 0.2s;
+    }
+
+    .skill-item:last-child { border-bottom: none; }
+    .skill-item:hover { color: var(--green); }
+
+    .skill-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--green);
+      flex-shrink: 0;
+      opacity: 0.6;
+    }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .about-text p {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.9;
+      margin-bottom: 1.2rem;
+    }
+
+    .about-text p strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .about-right {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .about-stat {
+      background: var(--surface);
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .about-stat-label {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    .about-stat-val {
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    .about-stat.open-to-work {
+      background: rgba(0,255,136,0.05);
+      border-left: 2px solid var(--green);
+    }
+
+    .open-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      margin-right: 0.4rem;
+      animation: blink 1.5s ease-in-out infinite;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 2rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 100%;
+    }
+
+    footer p {
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-links a {
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--green); }
+
+    /* ── REVEAL ANIMATION ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      section { padding: 4rem 1.5rem; }
+      .activity-wrap { grid-template-columns: 1fr; }
+      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-name { font-size: clamp(2.5rem, 15vw, 7rem); }
+    }
+  </style>
 </head>
 <body>
 
-  <button class="menu-button">≡</button>
-
-  <nav class="full-nav">
-    <a class="nav-link scroll" href="#home">Home</a>
-    <a class="nav-link scroll" href="#projects">Projects</a>
-    <a class="nav-link scroll" href="#skills">Skills</a>
-    <a class="nav-link scroll" href="#resume">Resume</a>
-    <a class="nav-link scroll" href="#about">About</a>
+  <!-- NAV -->
+  <nav>
+    <a href="#hero" class="nav-logo">NL</a>
+    <ul class="nav-links">
+      <li><a href="#projects">01 Projects</a></li>
+      <li><a href="#activity">02 Activity</a></li>
+      <li><a href="#skills">03 Skills</a></li>
+      <li><a href="#about">04 About</a></li>
+    </ul>
+    <span class="nav-badge">Open to Work</span>
   </nav>
 
   <main>
 
-    <section id="home" class="intro bg-image">
-      <h1 id="name">
-        Nicholas Lohmann
-      </h1>
-      <p id="roles"></p>
-      <div class="header-links">
-        <a class="page-link scroll" href="#projects">View My Projects</a>
-        <!-- <a class="page-link scroll" href="#contact">Contact Me</a> -->
+    <!-- HERO -->
+    <section id="hero">
+      <p class="hero-eyebrow">// CS Student &amp; Full Stack Developer</p>
+      <h1 class="hero-name">Nick<br><span>Lohmann</span></h1>
+      <div class="hero-typing-wrap">
+        <span class="prompt">$</span>
+        <span id="typing-text"></span>
+        <span class="cursor"></span>
+      </div>
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary">View Projects →</a>
+        <a href="https://github.com/nicklohmann" target="_blank" class="btn btn-outline">GitHub ↗</a>
+        <a href="mailto:nicklohmann@msn.com" class="btn btn-outline">Contact</a>
+      </div>
+      <p class="hero-scroll">Scroll to explore</p>
+    </section>
+
+    <!-- PROJECTS -->
+    <div class="divider"></div>
+    <section id="projects">
+      <p class="section-label">01</p>
+      <h2>Projects</h2>
+      <div class="projects-grid reveal">
+
+        <div class="project-card">
+          <p class="project-num">001</p>
+          <h3 class="project-title">Portfolio Site</h3>
+          <p class="project-desc">Personal portfolio built from scratch and deployed on Fly.io. Showcases projects, skills, and GitHub activity with a dark developer aesthetic.</p>
+          <div class="project-tags">
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
+            <span class="tag">JavaScript</span>
+            <span class="tag">Fly.io</span>
+            <span class="tag">Docker</span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/nicklohmann/portfolio" target="_blank">GitHub ↗</a>
+            <a href="#" target="_blank">Live ↗</a>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <p class="project-num">002</p>
+          <h3 class="project-title">Project Two</h3>
+          <p class="project-desc">Add your second project here — describe what it does, why you built it, and what makes it interesting to a recruiter or fellow dev.</p>
+          <div class="project-tags">
+            <span class="tag">React</span>
+            <span class="tag">Node.js</span>
+            <span class="tag">PostgreSQL</span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/nicklohmann" target="_blank">GitHub ↗</a>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <p class="project-num">003</p>
+          <h3 class="project-title">Project Three</h3>
+          <p class="project-desc">Add your third project here. Even if it's a WIP — "currently building" shows momentum and initiative, which recruiters love to see.</p>
+          <div class="project-tags">
+            <span class="tag">Python</span>
+            <span class="tag">FastAPI</span>
+            <span class="tag">Docker</span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/nicklohmann" target="_blank">GitHub ↗</a>
+          </div>
+        </div>
+
       </div>
     </section>
 
-    <section id="projects" class="section">
-      <p class="title"><span>Projects</span></p>
-      <div class="projects-container">
-        <div class="project lift">
-          <img class="screenshot" src="./assets/images/Cryptids.png" alt="Cryptid Seeker screenshot">
-          <div class="card-overlay">
-            <div class="project-title">
-              Cryptid Seeker
-            </div>
-            <div class="project-links">
-              <a class="project-link" href="https://github.com/MendersGame/front-end-cryptid-seeker" target="_blank">Github</a>
-              <a class="project-link" href="https://cryptid-seeker.netlify.app/" target="_blank">Live Site</a>
-            </div>
-            <div class="project-description">
-              A Group project to create a MERN full stack application using JWT that helps users search and write about cryptids encounters
-            </div>
-            <div class="project-skills">
-              <img src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E" alt="JavaScript badge" class="project-badge">
-              <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React Badge" class="project-badge">
-              <img src="https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB" alt="Express Badge" class="project-badge">
-              <img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white" alt="Node badge" class="project-badge">
-              <img src="https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB badge" class="project-badge">
-              <img src="https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white" alt="Vite badge"  class="project-badge">
-              <img src="https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens" alt="JWT badge"  class="project-badge">
-            </div>
-          </div>
+    <!-- ACTIVITY -->
+    <div class="divider"></div>
+    <section id="activity">
+      <p class="section-label">02</p>
+      <h2>GitHub Activity</h2>
+      <div class="activity-wrap reveal">
+        <div class="graph-card">
+          <h3>Contribution Graph</h3>
+          <img src="https://ghchart.rshah.org/00ff88/nicklohmann" alt="Nick Lohmann's GitHub contribution graph" />
         </div>
-        <div class="project lift">
-          <img class="screenshot" src="./assets/images/Dogs.png" alt="Dog Show screenshot">
-          <div class="card-overlay">
-            <div class="project-title">
-              Dog Show
-            </div>
-            <div class="project-links">
-              <a class="project-link" href="https://github.com/nicklohmann/dogShow-front-end" target="_blank">Github</a>
-              <a class="project-link" href="https://dogshow-nickl.netlify.app/" target="_blank">Live Site</a>
-            </div>
-            <div class="project-description">
-              A simple PERN stack app in TypeScript to let you show off your Dogs to your friends and family!
-            </div>
-            <div class="project-skills">
-              <img src="https://shields.io/badge/TypeScript-3178C6?logo=TypeScript&logoColor=FFF" alt="TypeScript Badge">
-              <img src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E" alt="JavaScript badge" class="project-badge">
-              <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React Badge" class="project-badge">
-              <img src="https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB" alt="Express Badge" class="project-badge">
-              <img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white" alt="Node badge" class="project-badge">
-              <img src="https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB badge" class="project-badge">
-              <img src="https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white" alt="Vite badge"  class="project-badge">
-              <img src="https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens" alt="JWT badge"  class="project-badge">
-            </div>
+        <div class="stats-col">
+          <div class="stat-box">
+            <div class="stat-value" id="stat-repos">—</div>
+            <div class="stat-label">Public Repos</div>
           </div>
-        </div>
-        <div class="project lift">
-          <img class="screenshot" src="./assets/images/Bulls.PNG" alt="Bulls-blog screenshot">
-          <div class="card-overlay">
-            <div class="project-title">
-              Bulls Blog
-            </div>
-            <div class="project-links">
-              <a class="project-link" href="https://github.com/nicklohmann/bulls-blog" target="_blank">Github</a>
-              <a class="project-link" href="https://bulls-blog.fly.dev/" target="_blank">Live Site</a>
-            </div>
-            <div class="project-description">
-              An open sourced MEN application utilizing Google OAuth helping users find other bulls fans and share their opinions.
-            </div>
-            <div class="project-skills">
-              <img src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E" alt="JavaScript badge" class="project-badge">
-              <img src="https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB" alt="Express Badge" class="project-badge">
-              <img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white" alt="Node badge" class="project-badge">
-              <img src="https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB badge" class="project-badge">
-              <img src="https://img.shields.io/badge/html5-E34F26?logo=html5&logoColor=white&style=for-the-badge" alt="HTML5 badge"
-              class="project-badge">
-              <img src="https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3 badge"  class="project-badge">
-            </div>
+          <div class="stat-box">
+            <div class="stat-value" id="stat-stars">—</div>
+            <div class="stat-label">Stars Earned</div>
           </div>
-        </div>
-        <div class="project lift">
-          <img class="screenshot" src="./assets/images/battleship.PNG" alt="Battleship screenshot">
-          <div class="card-overlay">
-            <div class="project-title">
-              BattleShip-ColdWar
-            </div>
-            <div class="project-links">
-              <a class="project-link" href="https://github.com/nicklohmann/Battleship-Cold-War" target="_blank">Github</a>
-              <a class="project-link" href="https://battleship-cold-war-nickl.netlify.app/" target="_blank">Live Site</a>
-            </div>
-            <div class="project-description">
-              My first attempt at a web game! Classic battleship game with cold war theme.
-            </div>
-            <div class="project-skills">
-              <img src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E" alt="JavaScript badge" class="project-badge">
-              <img src="https://img.shields.io/badge/html5-E34F26?logo=html5&logoColor=white&style=for-the-badge" alt="HTML5 badge"
-              class="project-badge">
-              <img src="https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3 badge"  class="project-badge">
-              <img src="https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white" alt="Git badge" class="project-badge">
-              <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white" alt="Github badge" class="project-badge">
-            </div>
+          <div class="stat-box">
+            <div class="stat-value">Daily</div>
+            <div class="stat-label">Commit Streak</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">2026</div>
+            <div class="stat-label">Active Since</div>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="skills" class="section">
-      <p class="title"><span>Skills</span></p>
-      <div class="skills-container">
-        <img src="https://shields.io/badge/TypeScript-3178C6?logo=TypeScript&logoColor=FFF" alt="TypeScript Badge" class="badge lift">
-        <img src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E" alt="JavaScript Badge" class="badge lift">
-        <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React Badge" class="badge lift">
-        <img src="https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB" alt="Express Badge" class="badge lift">
-        <img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white" alt="Node badge" class="badge lift">
-        <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white" alt="Java Badge" class="badge lift">
-        <img src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54" alt="Python badge"  class="badge lift">
-        <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL badge" class="badge lift">
-        <img src="https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white" alt="AWS badge"  class="badge lift">
-        <img src="https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB badge" class="badge lift">
-        <img src="https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white" alt="Django badge"  class="badge lift">
-        <img src="https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white" alt="Docker badge"  class="badge lift">
-        <img src="https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens" alt="JWT badge"  class="badge lift">
-        <img src="https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white" alt="Vite badge"  class="badge lift">
-        <img src="https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white" alt="Git badge" class="badge lift">
-        <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white" alt="Github badge" class="badge lift">
-        <img src="https://img.shields.io/badge/azure-%230072C6.svg?style=for-the-badge&logo=microsoftazure&logoColor=white" alt="Azure badge"  class="badge lift">
-        <img src="https://img.shields.io/badge/MUI-%230081CB.svg?style=for-the-badge&logo=mui&logoColor=white" alt="MUI badge"  class="badge lift">
-        <img src="https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white" alt="VSCode badge"  class="badge lift">
-        <img src="https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3 badge" class="badge lift">
-        <img src="https://img.shields.io/badge/html5-E34F26?logo=html5&logoColor=white&style=for-the-badge" alt="HTML5 badge" class="badge lift">
+    <!-- SKILLS -->
+    <div class="divider"></div>
+    <section id="skills">
+      <p class="section-label">03</p>
+      <h2>Skills</h2>
+      <div class="skills-grid reveal">
+
+        <div class="skills-group">
+          <p class="skills-group-title">Languages</p>
+          <div class="skill-item"><span class="skill-dot"></span>JavaScript</div>
+          <div class="skill-item"><span class="skill-dot"></span>TypeScript</div>
+          <div class="skill-item"><span class="skill-dot"></span>Python</div>
+          <div class="skill-item"><span class="skill-dot"></span>HTML / CSS</div>
+          <div class="skill-item"><span class="skill-dot"></span>SQL</div>
+          <div class="skill-item"><span class="skill-dot"></span>Bash</div>
+        </div>
+
+        <div class="skills-group">
+          <p class="skills-group-title">Frameworks & Libraries</p>
+          <div class="skill-item"><span class="skill-dot"></span>React</div>
+          <div class="skill-item"><span class="skill-dot"></span>Node.js / Express</div>
+          <div class="skill-item"><span class="skill-dot"></span>FastAPI</div>
+          <div class="skill-item"><span class="skill-dot"></span>Flask</div>
+          <div class="skill-item"><span class="skill-dot"></span>Tailwind CSS</div>
+        </div>
+
+        <div class="skills-group">
+          <p class="skills-group-title">Databases</p>
+          <div class="skill-item"><span class="skill-dot"></span>PostgreSQL</div>
+          <div class="skill-item"><span class="skill-dot"></span>MySQL</div>
+          <div class="skill-item"><span class="skill-dot"></span>MongoDB</div>
+          <div class="skill-item"><span class="skill-dot"></span>Redis</div>
+          <div class="skill-item"><span class="skill-dot"></span>SQLite</div>
+        </div>
+
+        <div class="skills-group">
+          <p class="skills-group-title">Cloud & DevOps</p>
+          <div class="skill-item"><span class="skill-dot"></span>Docker</div>
+          <div class="skill-item"><span class="skill-dot"></span>Fly.io</div>
+          <div class="skill-item"><span class="skill-dot"></span>Git / GitHub</div>
+          <div class="skill-item"><span class="skill-dot"></span>Linux</div>
+          <div class="skill-item"><span class="skill-dot"></span>AWS (basics)</div>
+        </div>
+
       </div>
-    </section>
-    
-    <section id="resume" class="section">
-      <p class="title"><span>Resume</span></p>
-      <p class="plain">Click below to download my resume</p>
-      <a href="./assets/NickL-Resume.pdf" class="lift" download="NickL-Resume.pdf">
-        <img class="resume-icon" src="./assets/images/resume.png" alt="resume icon for resume download">
-      </a>
     </section>
 
-    <section id="about" class="section">
-      <p class="title"><span>About Nicholas</span></p>
-      <div class="about-info">
-        <img src="./assets/images/Nick.jpg" alt="Nick headshot" class="about-image">
-        <p class="about-text">
-          I'm a recent full stack bootcamp grad
-        </p>
-        <p class="about-text">
-          I am a highly motivated and talented software engineer who recently graduated from the General Assembly bootcamp. I have a passion for problem-solving and a long technical background, I'm eager to contribute my skills to the ever-evolving world of technology.
-        </p>
-        <p class="about-text">
-          As a quick learner and adaptable individual, I thrive in dynamic environments. I possess excellent analytical and critical thinking abilities, enabling myself to identify innovative solutions to complex problems. With a keen eye for detail and a commitment to delivering high-quality code, I am dedicated to producing software that meets the highest standards.
-        </p>
+    <!-- ABOUT -->
+    <div class="divider"></div>
+    <section id="about">
+      <p class="section-label">04</p>
+      <h2>About</h2>
+      <div class="about-grid reveal">
+        <div class="about-text">
+          <p>Hey, I'm <strong>Nick</strong> — a CS student and full stack developer based in the US. I build things for the web, commit daily to GitHub, and genuinely enjoy the process of turning ideas into working software.</p>
+          <p>I'm most comfortable working across the stack — from designing APIs to wiring up frontends — and I'm always pushing to get better. Whether it's a side project or a collaborative codebase, I show up and ship.</p>
+          <p>Currently looking for <strong>dev roles</strong> where I can contribute fast, learn from strong engineers, and build things that actually matter. If that sounds like your team, I'd love to talk.</p>
+          <a href="mailto:nicklohmann@msn.com" class="btn btn-primary" style="margin-top:1.5rem; display:inline-flex;">Get in touch →</a>
+        </div>
+        <div class="about-right">
+          <div class="about-stat open-to-work">
+            <span class="about-stat-label"><span class="open-dot"></span>Status</span>
+            <span class="about-stat-val">Open to Work</span>
+          </div>
+          <div class="about-stat">
+            <span class="about-stat-label">Focus</span>
+            <span class="about-stat-val">Full Stack Dev</span>
+          </div>
+          <div class="about-stat">
+            <span class="about-stat-label">Education</span>
+            <span class="about-stat-val">CS Student</span>
+          </div>
+          <div class="about-stat">
+            <span class="about-stat-label">GitHub</span>
+            <span class="about-stat-val">@nicklohmann</span>
+          </div>
+          <div class="about-stat">
+            <span class="about-stat-label">Email</span>
+            <span class="about-stat-val">nicklohmann@msn.com</span>
+          </div>
+        </div>
       </div>
-      <a class="page-link scroll" href="#home">Back To Top</a>
     </section>
+
   </main>
-  <div class="footer">
-    <a target="_blank" href="./assets/NickL-Resume.pdf" class="lift">
-      <img class="footer-icon" src="./assets/images/resume.png" alt="link to resume">
-    </a>
-    <a target="_blank" href="https://www.linkedin.com/in/nicholas-lohmann/" class="lift">
-      <img class="footer-icon" src="./assets/images/linkedin.png" alt="linkedin icon liking to linked profile">
-    </a>
-    <a target="_blank" href="https://github.com/nicklohmann" class="lift">
-      <img class="footer-icon" src="./assets/images/github-mark-white.png" alt="github icon linking to github profile">
-    </a>
-    <a target="_blank" href="mailto:nicklohmann@msn.com" class="lift">
-      <img class="footer-icon" src="./assets/images/mail.png" alt="email icon">
-    </a>
-    
-  </div>
+
+  <footer>
+    <p>© 2026 Nick Lohmann — Built &amp; deployed with Fly.io</p>
+    <div class="footer-links">
+      <a href="https://github.com/nicklohmann" target="_blank">GitHub</a>
+      <a href="mailto:nicklohmann@msn.com">Email</a>
+    </div>
+  </footer>
+
+  <script>
+    // Typing effect
+    const phrases = [
+      'committing daily to GitHub',
+      'building full stack apps',
+      'open to dev roles',
+      'learning something new every day',
+      'shipping, not just planning'
+    ];
+    let pi = 0, ci = 0, deleting = false;
+    const el = document.getElementById('typing-text');
+
+    function type() {
+      const phrase = phrases[pi];
+      if (!deleting) {
+        el.textContent = phrase.slice(0, ++ci);
+        if (ci === phrase.length) { deleting = true; setTimeout(type, 2000); return; }
+      } else {
+        el.textContent = phrase.slice(0, --ci);
+        if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; }
+      }
+      setTimeout(type, deleting ? 40 : 80);
+    }
+    type();
+
+    // Scroll reveal
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // GitHub stats
+    fetch('https://api.github.com/users/nicklohmann')
+      .then(r => r.json())
+      .then(d => {
+        document.getElementById('stat-repos').textContent = d.public_repos ?? '—';
+      })
+      .catch(() => {});
+
+    // Count stars
+    fetch('https://api.github.com/users/nicklohmann/repos?per_page=100')
+      .then(r => r.json())
+      .then(repos => {
+        if (!Array.isArray(repos)) return;
+        const stars = repos.reduce((sum, r) => sum + (r.stargazers_count || 0), 0);
+        document.getElementById('stat-stars').textContent = stars;
+      })
+      .catch(() => {});
+  </script>
+
 </body>
 </html>
